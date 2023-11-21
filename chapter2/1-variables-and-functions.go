@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func main() {
+func RunVariablesAndFunctions() {
 	fmt.Println(123)
 
 	var whatToSay string
