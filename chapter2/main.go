@@ -1,6 +1,7 @@
 package main
 
 func main() {
-	RunVariablesAndFunctions()
-	RunPointers()
+	//RunVariablesAndFunctions()
+	//RunPointers()
+	RunTypes()
 }
