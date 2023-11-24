@@ -15,6 +15,10 @@ type User struct {
 	BirthDate   time.Time
 }
 
+func (user *User) printUserName() {
+	fmt.Println(user.FirstName, user.LastName)
+}
+
 func RunTypes() {
 	fmt.Println(someString)
 	someString := "Also bla bla"
@@ -26,4 +30,5 @@ func RunTypes() {
 	}
 
 	fmt.Println(user)
+	user.printUserName()
 }
