@@ -3,5 +3,6 @@ package main
 func main() {
 	//RunVariablesAndFunctions()
 	//RunPointers()
-	RunTypes()
+	//RunTypes()
+	RunDataStructures()
 }
