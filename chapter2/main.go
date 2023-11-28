@@ -6,5 +6,6 @@ func main() {
 	//RunTypes()
 	//RunDataStructures()
 	//RunConditions()
-	RunLoops()
+	//RunLoops()
+	RunInterfaces()
 }
