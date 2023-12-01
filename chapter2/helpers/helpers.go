@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"errors"
 	"fmt"
 	"math/rand"
 	"time"
@@ -8,6 +9,13 @@ import (
 
 func CalculateSum(num1 int, num2 int) int {
 	return num1 + num2
+}
+
+func CalculateDivide(a, b float32) (float32, error) {
+	if b == 0 {
+		return 0, errors.New("cannot divide by zero")
+	}
+	return a / b, nil
 }
 
 func PrintText(text *string) {
