@@ -5,10 +5,10 @@ import (
 	"net/http"
 )
 
-func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "home")
+func Home(w http.ResponseWriter, r *http.Request) {
+	render.Template(w, "home")
 }
 
-func AboutHandler(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "about")
+func About(w http.ResponseWriter, r *http.Request) {
+	render.Template(w, "about")
 }

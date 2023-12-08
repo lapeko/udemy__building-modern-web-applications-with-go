@@ -9,8 +9,8 @@ import (
 const port = ":8080"
 
 func main() {
-	http.HandleFunc("/", handlers.HomeHandler)
-	http.HandleFunc("/about", handlers.AboutHandler)
-	fmt.Printf("Server is running on port: %s", port)
+	http.HandleFunc("/", handlers.Home)
+	http.HandleFunc("/about", handlers.About)
+	fmt.Printf("Server is running on port: %s\n", port)
 	_ = http.ListenAndServe(port, nil)
 }
