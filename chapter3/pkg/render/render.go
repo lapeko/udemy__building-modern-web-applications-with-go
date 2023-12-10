@@ -1,30 +1,64 @@
 package render
 
 import (
-	"fmt"
+	"bytes"
+	"log"
 	"net/http"
+	"path/filepath"
 	"text/template"
 )
 
-var templateCache = make(map[string]*template.Template)
+var templateCache, err = createCache()
 
 func Template(w http.ResponseWriter, templateName string) {
-	templates, _ := makeTemplates(templateName)
-	err := templates.Execute(w, nil)
 	if err != nil {
-		fmt.Printf("Template %s successfully send", templateName)
+		log.Fatal(err)
+	}
+	cachedTemplate, exists := templateCache[templateName]
+
+	if !exists {
+		log.Fatal("Template ", templateName, " does not exist")
+	}
+	buf := new(bytes.Buffer)
+	err = cachedTemplate.Execute(buf, nil)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = buf.WriteTo(w)
+
+	if err != nil {
+		log.Fatal(err)
 	}
 }
 
-func makeTemplates(templateName string) (*template.Template, error) {
-	templates, keyExist := templateCache[templateName]
-	if keyExist {
-		return templates, nil
-	}
-	templates, err := template.ParseFiles("./templates/"+templateName+".page.gohtml", "./templates/base.layout.gohtml")
+func createCache() (map[string]*template.Template, error) {
+	cache := map[string]*template.Template{}
+	pages, err := filepath.Glob("templates/*.page.gohtml")
+
 	if err != nil {
-		return nil, err
+		return cache, err
 	}
-	templateCache[templateName] = templates
-	return templates, nil
+
+	for _, page := range pages {
+		name := filepath.Base(page)
+		temp, err := template.New(name).ParseFiles(page)
+
+		if err != nil {
+			return cache, err
+		}
+
+		layouts, err := filepath.Glob("templates/*.layout.gohtml")
+
+		if len(layouts) > 0 {
+			_, err := temp.ParseGlob("templates/*.layout.gohtml")
+			if err != nil {
+				return cache, err
+			}
+		}
+		cache[name] = temp
+	}
+
+	return cache, nil
 }
