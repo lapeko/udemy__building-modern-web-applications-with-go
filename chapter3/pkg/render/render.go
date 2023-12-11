@@ -2,25 +2,39 @@ package render
 
 import (
 	"bytes"
+	"chapter3/pkg/config"
 	"log"
 	"net/http"
 	"path/filepath"
 	"text/template"
 )
 
-var templateCache, err = createCache()
+var appConfig *config.Config
+
+func NewTemplates(config *config.Config) {
+	appConfig = config
+}
 
 func Template(w http.ResponseWriter, templateName string) {
-	if err != nil {
-		log.Fatal(err)
+	var templateMap map[string]*template.Template
+	if appConfig.CacheTemplates {
+		templateMap = appConfig.TemplateCache
+	} else {
+		tm, err := CreateCache()
+		if err != nil {
+			log.Fatal(err)
+		}
+		templateMap = tm
 	}
-	cachedTemplate, exists := templateCache[templateName]
+
+	templates, exists := templateMap[templateName]
 
 	if !exists {
-		log.Fatal("Template ", templateName, " does not exist")
+		log.Fatalln("Template", templateName, " not found")
 	}
+
 	buf := new(bytes.Buffer)
-	err = cachedTemplate.Execute(buf, nil)
+	err := templates.Execute(buf, nil)
 
 	if err != nil {
 		log.Fatal(err)
@@ -33,7 +47,7 @@ func Template(w http.ResponseWriter, templateName string) {
 	}
 }
 
-func createCache() (map[string]*template.Template, error) {
+func CreateCache() (map[string]*template.Template, error) {
 	cache := map[string]*template.Template{}
 	pages, err := filepath.Glob("templates/*.page.gohtml")
 

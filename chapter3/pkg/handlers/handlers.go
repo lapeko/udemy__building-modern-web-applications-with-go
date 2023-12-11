@@ -1,14 +1,27 @@
 package handlers
 
 import (
+	"chapter3/pkg/config"
 	"chapter3/pkg/render"
 	"net/http"
 )
 
-func Home(w http.ResponseWriter, r *http.Request) {
+type Repository struct {
+	App *config.Config
+}
+
+var Repo *Repository
+
+func NewHandlers(config *config.Config) {
+	Repo = &Repository{
+		App: config,
+	}
+}
+
+func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	render.Template(w, "home.page.gohtml")
 }
 
-func About(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 	render.Template(w, "about.page.gohtml")
 }
