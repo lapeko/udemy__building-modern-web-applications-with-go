@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"chapter3/cmd/models"
 	"chapter3/pkg/config"
 	"chapter3/pkg/render"
 	"net/http"
@@ -19,9 +20,9 @@ func NewHandlers(config *config.Config) {
 }
 
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
-	render.Template(w, "home.page.gohtml")
+	render.Template(w, "home.page.gohtml", &models.RenderData{})
 }
 
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
-	render.Template(w, "about.page.gohtml")
+	render.Template(w, "about.page.gohtml", &models.RenderData{})
 }

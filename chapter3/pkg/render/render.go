@@ -2,6 +2,7 @@ package render
 
 import (
 	"bytes"
+	"chapter3/cmd/models"
 	"chapter3/pkg/config"
 	"log"
 	"net/http"
@@ -15,7 +16,11 @@ func NewTemplates(config *config.Config) {
 	appConfig = config
 }
 
-func Template(w http.ResponseWriter, templateName string) {
+func ApplyDefaultRenderData(data *models.RenderData) {
+	data.StringMap = map[string]string{"test": "Hello world"}
+}
+
+func Template(w http.ResponseWriter, templateName string, data *models.RenderData) {
 	var templateMap map[string]*template.Template
 	if appConfig.CacheTemplates {
 		templateMap = appConfig.TemplateCache
@@ -33,8 +38,10 @@ func Template(w http.ResponseWriter, templateName string) {
 		log.Fatalln("Template", templateName, " not found")
 	}
 
+	ApplyDefaultRenderData(data)
+
 	buf := new(bytes.Buffer)
-	err := templates.Execute(buf, nil)
+	err := templates.Execute(buf, data)
 
 	if err != nil {
 		log.Fatal(err)
